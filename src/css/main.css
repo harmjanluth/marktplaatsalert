@@ -314,6 +314,8 @@ ul {
     .alerts-list li:hover p {
       color: #fe4c4e;
       text-decoration: line-through; }
+    .alerts-list li:hover span {
+      text-decoration: line-through; }
     .alerts-list li p {
       margin: 0; }
     .alerts-list li span {

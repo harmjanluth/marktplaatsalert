@@ -13,7 +13,7 @@ marktplaats_alert = {};
       fireAlert.child("users/" + user.uid + "/profile").transaction(function(data) {
         uid = user.uid;
         if (user.displayName) {
-          $(".welcome").html(user.displayName);
+          $(".welcome span").html(user.displayName);
         }
         return user;
       });

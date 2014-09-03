@@ -33,7 +33,7 @@ module.exports = (grunt) ->
 				dest: 'src/js/<%= pkg.name %>.js'
 			css:
 				src: ['src/css/fontello.css', 'src/css/animation.css', 'src/css/main.css']
-				dest: 'src/css/staatkudos.css'
+				dest: 'src/css/marktplaatsupdate.css'
 		uglify:
 			options:
 				banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
@@ -46,7 +46,7 @@ module.exports = (grunt) ->
 			minify:
 				expand:true
 				cwd: 'src/css'
-				src: 'staatkudos.css'
+				src: 'marktplaatsupdate.css'
 				dest: 'build/css/'
 				ext: '.min.css'
 		copy:
@@ -68,30 +68,6 @@ module.exports = (grunt) ->
 					process: false
 				files: 'build/index.html' : [ 'build/index.html' ]
 
-		ftp_push : 
-			staatkudos:
-				options:
-					authKey: 'production'
-					host: 'ftp.imice.nl'
-					dest: '/webroot/'
-					port: 21
-				files: [ 
-					expand: true
-					cwd: 'build'
-					src: ['**/*']
-				]
-		htmlSnapshot :
-			all:
-				options:
-					snapshotPath: 'src/snapshot/'
-					fileNamePrefix: 'index'
-					removeScripts: true
-					removeLinkTags: true
-					bodyAttr: 'data-prerendered'
-					sitePath: 'http://localhost/root/staatkudos/src/'
-					msWaitForPages: 1000
-					urls: ['']
-
 	# These plugins provide necessary tasks.
 	grunt.loadNpmTasks 'grunt-contrib-coffee'
 	grunt.loadNpmTasks 'grunt-contrib-copy'
@@ -103,11 +79,9 @@ module.exports = (grunt) ->
 	grunt.loadNpmTasks 'grunt-contrib-uglify'
 	grunt.loadNpmTasks 'grunt-contrib-cssmin'
 	grunt.loadNpmTasks 'grunt-processhtml'
-	grunt.loadNpmTasks 'grunt-ftp-push'
-	grunt.loadNpmTasks 'grunt-html-snapshot'
-	
+		
 	# Default task.
 	grunt.registerTask 'default', [ 'watch' ]
-	grunt.registerTask 'build', [ 'coffee', 'sass', 'concat', 'uglify', 'cssmin', 'htmlSnapshot', 'copy', 'processhtml' ]
-	grunt.registerTask 'deploy', [ 'build', 'ftp_push' ]
+	grunt.registerTask 'build', [ 'coffee', 'sass', 'concat', 'uglify', 'cssmin', 'copy', 'processhtml' ]
+	grunt.registerTask 'deploy', [ 'build' ]
 	grunt.registerTask 'clean', [ 'clean:build' ]

@@ -27,7 +27,7 @@ marktplaats_alert = {}
 
 				# Show name
 				#
-				$( ".welcome" ).html( user.displayName ) if user.displayName
+				$( ".welcome span" ).html( user.displayName ) if user.displayName
 
 				return user
 

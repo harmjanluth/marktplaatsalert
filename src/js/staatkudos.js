@@ -2125,54 +2125,23 @@ if (typeof define !== 'undefined' && define.amd) {
 	module.exports.FastClick = FastClick;
 } else {
 	window.FastClick = FastClick;
-};var staatkudos;
+};var marktplaats_alert;
 
-staatkudos = {};
+marktplaats_alert = {};
 
 (function() {
-  var auth, drawChart, getTodayFormatted, handleClick, kudos, loggedIn, parties, resetCounters, setupList, showLogin, staatKudos;
-  kudos = null;
-  parties = {
-    "vvd": {
-      "label": "VVD"
-    },
-    "pvda": {
-      "label": "PvdA"
-    },
-    "pvv": {
-      "label": "PVV"
-    },
-    "cda": {
-      "label": "CDA"
-    },
-    "sp": {
-      "label": "SP"
-    },
-    "groenlinks": {
-      "label": "GroenLinks"
-    },
-    "d66": {
-      "label": "D66"
-    },
-    "christenunie": {
-      "label": "ChristenUnie"
-    },
-    "partijvoordedieren": {
-      "label": "Partij voor de Dieren"
-    },
-    "vijftigplus": {
-      "label": "50PLUS"
-    },
-    "sgp": {
-      "label": "SGP"
-    }
-  };
-  staatKudos = new Firebase("https://flickering-fire-1109.firebaseio.com");
-  auth = new FirebaseSimpleLogin(staatKudos, function(error, user) {
+  var addAlertForm, auth, fireAlert, getTodayFormatted, initialize, loggedIn, numberOfAlerts, showLogin, uid;
+  uid = null;
+  numberOfAlerts = null;
+  addAlertForm = document.getElementById("add-alert-form");
+  fireAlert = new Firebase("https://marktplaats-alert.firebaseIO.com");
+  auth = new FirebaseSimpleLogin(fireAlert, function(error, user) {
     if (user) {
-      document.querySelector("section.login").style.display = "none";
-      kudos = staatKudos.child("users/" + user.uid + "/kudos/tweedekamer");
-      staatKudos.child("users/" + user.uid + "/profile").transaction(function(data) {
+      fireAlert.child("users/" + user.uid + "/profile").transaction(function(data) {
+        uid = user.uid;
+        if (user.displayName) {
+          $(".welcome").html(user.displayName);
+        }
         return user;
       });
       loggedIn();
@@ -2181,29 +2150,15 @@ staatkudos = {};
     }
   });
   loggedIn = function() {
-    var logoutButton;
-    setupList();
-    document.querySelector(".parties-list").style.display = "block";
-    if (document.addEventListener) {
-      document.addEventListener("click", function(event) {
-        return handleClick(event);
-      });
-    } else if (document.attachEvent) {
-      document.attachEvent("click", function(event) {
-        return handleClick(event);
-      });
-    }
-    logoutButton = document.querySelector(".logout");
-    document.querySelector("section.footer").style.display = "block";
-    return logoutButton.onclick = function() {
+    initialize();
+    document.body.className = "logged-in";
+    return $(".logout").on("click", function() {
       auth.logout();
-      return resetCounters();
-    };
+      return document.body.className = "";
+    });
   };
   showLogin = function() {
-    document.querySelector("section.login").style.display = "block";
-    document.querySelector("section.footer").style.display = "none";
-    document.querySelector(".parties-list").style.display = "none";
+    document.body.className = "";
     document.querySelector(".login-facebook").onclick = function() {
       return auth.login("facebook", {
         rememberMe: true
@@ -2220,134 +2175,61 @@ staatkudos = {};
       });
     };
   };
-  handleClick = function(event) {
-    var d, element, milliseconds, party;
-    console.log(event);
-    element = event.target;
-    if (element.nodeName === "BUTTON") {
-      party = element.getAttribute("data-rel");
-      if (party) {
-        d = new Date();
-        milliseconds = d.getTime();
-        if (element.className === "plus") {
-          kudos.child(party).transaction(function(data) {
-            var dates, input;
-            if (!data) {
-              data = {};
-            }
-            if (data.count) {
-              data.count++;
-            } else {
-              data.count = 1;
-            }
-            document.getElementById("kudos-count-" + party).innerHTML = data.count;
-            if (!data.history) {
-              data.history = {};
-            }
-            if (data.history[getTodayFormatted()]) {
-              data.history[getTodayFormatted()]++;
-            } else {
-              data.history[getTodayFormatted()] = 1;
-            }
-            input = [["x", "val"]];
-            for (dates in data.history) {
-              input.push([dates, data.history[dates]]);
-            }
-            drawChart(party, input);
-            return data;
-          });
-        }
-        if (element.className === "minus") {
-          kudos.child(party).transaction(function(data) {
-            var dates, input;
-            if (!data) {
-              data = {};
-            }
-            if (data.count) {
-              data.count--;
-            } else {
-              data.count = -1;
-            }
-            document.getElementById("kudos-count-" + party).innerHTML = data.count;
-            if (!data.history) {
-              data.history = {};
-            }
-            if (data.history[getTodayFormatted()]) {
-              data.history[getTodayFormatted()]--;
-            } else {
-              data.history[getTodayFormatted()] = -1;
-            }
-            input = [["x", "val"]];
-            for (dates in data.history) {
-              input.push([dates, data.history[dates]]);
-            }
-            drawChart(party, input);
-            return data;
-          });
-        }
-      }
+  $("#add-alert-form").on("submit onsubmit", function() {
+    var query;
+    if (numberOfAlerts > 9) {
+      window.alert("Maximum aantal zoekopdrachten (voor nu) is 10, verwijder eerst andere zoekopdrachten om een nieuwe toe te voegen.");
+      return;
     }
-    if (element.nodeName === "A") {
-      if (element.className === "reset-initial") {
-        event.preventDefault();
-        element.className = "reset-initial clicked";
-        setTimeout((function() {
-          element.className = "reset-initial";
-        }), 3000);
-      }
-      if (element.className === "confirm-reset") {
-        event.preventDefault();
-        resetCounters();
-        kudos.transaction(function(data) {
-          return null;
-        });
-        return document.querySelector(".reset-initial").className = "reset-initial";
-      }
+    query = document.getElementById("alert-query-input").value;
+    fireAlert.child("users/" + uid + "/alerts").push({
+      query: query,
+      created: Date.now()
+    });
+    document.getElementById("alert-query-input").value = "";
+    return false;
+  });
+  $("body").on("click", "li", function() {
+    var id;
+    id = $(this).attr("data-id");
+    if (id) {
+      return fireAlert.child("users/" + uid + "/alerts/" + id).remove();
     }
-  };
-  resetCounters = function() {
-    var counter, counters, _i, _len, _results;
-    counters = document.querySelectorAll(".parties-list strong");
-    _results = [];
-    for (_i = 0, _len = counters.length; _i < _len; _i++) {
-      counter = counters[_i];
-      _results.push(counter.innerHTML = "");
-    }
-    return _results;
-  };
-  setupList = function() {
-    return kudos.once("value", function(snapshot) {
-      var child, data, dates, histories, history, html, input, myKudo, myKudos, rows, template, _results;
+  });
+  initialize = function() {
+    fireAlert.child("users/" + uid + "/alerts").on("value", function(snapshot) {
+      var html, myAlerts, rows, template;
       if (!snapshot) {
         return;
       }
-      myKudos = snapshot.val();
-      histories = [];
-      for (myKudo in myKudos) {
-        data = myKudos[myKudo];
-        if (data.history) {
-          histories[myKudo] = data.history;
-        }
-        for (child in data) {
-          parties[myKudo][child] = data[child];
-        }
-      }
-      template = _.template(document.getElementById("tpl-parties").innerHTML);
+      myAlerts = snapshot.val();
+      template = _.template(document.getElementById("tpl-alerts").innerHTML);
+      numberOfAlerts = _.size(myAlerts);
       rows = {
-        parties: parties
+        alerts: myAlerts
       };
       html = template(rows);
-      document.querySelector(".parties-list").innerHTML = html;
-      _results = [];
-      for (history in histories) {
-        data = histories[history];
-        input = [["x", "val"]];
-        for (dates in data) {
-          input.push([dates, data[dates]]);
-        }
-        _results.push(drawChart(history, input));
+      return document.querySelector(".alerts-list").innerHTML = html;
+    });
+    fireAlert.child("users/" + uid + "/preferences").once("value", function(snapshot) {
+      var preferences;
+      preferences = snapshot.val();
+      if (!preferences.timeout) {
+        return;
       }
-      return _results;
+      $("#set-preferences [name=period]").val(preferences.period);
+      return $("#set-preferences [name=times]").val(preferences.times);
+    });
+    return $("#set-preferences select").on("change", function() {
+      var period, timeout, times;
+      period = $("#set-preferences [name=period]").val();
+      times = $("#set-preferences [name=times]").val();
+      timeout = period / times;
+      return fireAlert.child("users/" + uid + "/preferences").set({
+        timeout: timeout,
+        period: period,
+        times: times
+      });
     });
   };
   getTodayFormatted = function() {
@@ -2355,25 +2237,6 @@ staatkudos = {};
     date = new Date();
     return (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getFullYear().toString().substr(2, 2);
   };
-  drawChart = function(id, input) {
-    var data;
-    data = google.visualization.arrayToDataTable(input);
-    new google.visualization.LineChart(document.getElementById(id + "-visualization")).draw(data, {
-      colors: ["#ddd"],
-      curveType: "function",
-      width: 480,
-      height: 100,
-      fontSize: 0,
-      axisTitlesPosition: "none",
-      vAxis: {
-        baselineColor: "white",
-        gridlines: {
-          color: "white"
-        }
-      }
-    });
-  };
-  google.setOnLoadCallback();
   return window.addEventListener("load", (function() {
     FastClick.attach(document.body);
   }), false);
