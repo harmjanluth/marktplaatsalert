@@ -34,9 +34,11 @@ function findNewAlerts()
 
         // Not update anything yet
         //
-        if( FALSE && ( abs( $user->last_checked ) - $now ) < $timeout ) {
-            continue;
-        }
+		if( isset( $user->last_checked ) ) { 
+        		if( ( abs( $user->last_checked ) - $now ) < $timeout ) {
+            		continue;
+    	    		}
+		}
 
         // No alerts.. so do nothing
         //
@@ -52,7 +54,7 @@ function findNewAlerts()
             //
             $ch = curl_init();
             
-            curl_setopt( $ch, CURLOPT_URL, "http://localhost/private/marktplaatsalert/crawler/crawl.php?uid=" . $uid ); 
+            curl_setopt( $ch, CURLOPT_URL, "http://www.marktplaatsupdate.nl/crawler/crawl.php?uid=" . $uid ); 
             curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
             curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1);
              
