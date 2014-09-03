@@ -1,0 +1,278 @@
+@import "normalize"
+
+@mixin opacity($value)
+	$IEValue: $value*101
+	opacity: $value
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity="+$IEValue+")"
+	filter: alpha(opacity=$IEValue)
+
+@mixin clearfix 
+	&:after
+		content: ""
+		display: table
+		clear: both
+
+$action : #fe4c4e
+$gray : #69757e
+$width: 400px
+
+// Glyphicons
+//
+@font-face
+	font-family: 'icomoon'
+	src: url('../fonts/icomoon/icomoon.eot?-x78r9o')
+	src: url('../fonts/icomoon/icomoon.eot?#iefix-x78r9o') format('embedded-opentype'),url('../fonts/icomoon/icomoon.woff?-x78r9o') format('woff'),url('../fonts/icomoon/icomoon.ttf?-x78r9o') format('truetype'),url('../fonts/icomoon/icomoon.svg?-x78r9o#icomoon') format('svg')
+	font-weight: normal
+	font-style: normal
+
+[class^="icon-"], [class*=" icon-"]
+	font-family: 'icomoon'
+	speak: none
+	font-style: normal
+	font-weight: normal
+	font-variant: normal
+	text-transform: none
+	line-height: 1
+	-webkit-font-smoothing: antialiased
+	-moz-osx-font-smoothing: grayscale
+
+.icon-twitter:before
+	content: "\e600"
+
+.icon-facebook:before
+	content: "\e601"
+
+.icon-googleplus:before
+	content: "\e602"
+
+html, body
+	padding: 0
+	margin: 0
+	height: 100%
+	width: 100%
+	font-family: 'Lato', sans-serif
+	font-size: 15px
+	background-color: #f1f1f1
+
+input, textarea, select, option
+	font-family: 'Lato', sans-serif
+	font-size: 15px
+
+*
+	box-sizing: border-box
+
+a
+	text-decoration: none
+	color: $action
+
+	span
+		display: inline-block
+		background-color: #fff
+		padding: 0.2em 0.3em
+		border-radius: 5px
+
+section
+	color: #000
+
+.welcome
+	font-size: 1.4em
+
+.header
+	text-transform: uppercase
+	text-align: center
+	margin: 0
+	padding: 1em 0 0 0
+	font-size: 2em
+
+	strong
+		font-weight: 900
+
+	span
+		font-weight: 100
+		color: $action
+		
+.btn
+	cursor: pointer
+
+.semantic
+	text-indent: 100%
+	white-space: nowrap
+	overflow: hidden
+
+.more
+	padding-bottom: 2em
+
+#set-preferences
+	margin: 0 auto
+	width: $width
+
+	p
+		display: block
+		text-align: center
+
+#add-alert-form
+	margin: 0 auto
+	width: $width
+	padding-top: 5em
+	text-align: center
+
+	input
+		width: $width
+		text-align: center
+		padding: 1em
+		border-width: 1px
+		border-color: #666
+		font-size: 1.2em
+
+	label
+		display: block
+		text-align: center
+		width: 100%
+		padding-top: 1em
+		color: #999
+
+.button
+	position: relative
+	display: inline-block
+	
+	a
+		color: white
+		font-weight: bold
+		font-size: 20px
+		text-align: center
+		text-decoration: none
+		background-color: $action
+		display: block
+		position: relative
+		padding: 0.6em 1em
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+		text-shadow: 0px 1px 0px darken( $action, 20 )
+		filter: dropshadow(color = black, offx = 0px, offy = 1px)
+		-webkit-box-shadow: inset 0 1px 0 $action, 0 8px 0 darken( $action, 30 )
+		-moz-box-shadow: inset 0 1px 0 $action, 0 8px 0 darken( $action, 30 )
+		box-shadow: inset 0 1px 0 $action, 0 8px 0 darken( $action, 30 )
+		-webkit-border-radius: 5px
+		-moz-border-radius: 5px
+		border-radius: 5px
+
+		-webkit-transition: background-color 100ms linear
+		-moz-transition: background-color 100ms linear
+		-o-transition: background-color 100ms linear
+		-ms-transition: background-color 100ms linear
+		transition: background-color 100ms linear
+
+		&:active
+			top: 8px
+			background-color: lighten( $action, 5 )
+			-webkit-box-shadow: inset 0 1px 0 $action, inset 0 -3px 0 darken( $action, 30 )
+			-moz-box-shadow: inset 0 1px 0 $action, inset 0 -3pxpx 0 darken( $action, 30 )
+			box-shadow: inset 0 1px 0 $action, inset 0 -3px 0 darken( $action, 30 )
+			  
+		&:after
+			content: ""
+			height: 100%
+			width: 100%
+			padding: 4px
+			position: absolute
+			bottom: -15px
+			left: -4px
+			z-index: -1
+			background-color: $action
+			-webkit-border-radius: 5px
+			-moz-border-radius: 5px
+			border-radius: 5px
+
+ul
+	list-style: none
+	margin: 0 auto
+	text-align: center
+
+	li
+		display: block
+	
+		
+.intro
+	
+	font-size: 1.3em
+	line-height: 1.6em
+	padding: 50px 0
+
+	span
+		color: $action
+
+.alerts-list
+	margin-top: 4em
+	background-color: #fff
+	width: $width
+	padding: 0
+
+	li
+		padding: 1em
+		border-width: 0 1px 1px 0
+		border-style: solid solid dashed solid
+		border-color: #ccc
+		font-size: 1.2em
+		cursor: pointer
+
+		&:hover p
+			color: $action
+			text-decoration: line-through
+			
+		p
+			margin: 0
+
+		span
+			font-size: 0.8em
+			color: #ccc
+
+		&:last-child
+			border-bottom: 1px solid #ccc
+
+.footer
+	text-align: center
+	padding: 50px 0
+	display: none
+
+	p
+		width: $width
+		color: #999
+		margin: 0 auto 2em auto
+
+
+#set-preferences,
+#add-alert-form,
+.alerts-list
+	display: none
+
+.logged-in
+	#set-preferences,
+	#add-alert-form,
+	.alerts-list,
+	.footer
+		display: block
+	.login
+		display: none
+
+section
+
+	&.login
+		text-align: center
+		
+		.socials
+
+			margin-bottom: 7em
+
+			a
+				cursor: pointer
+				font-size: 4.2em
+				padding: 0 0.2em
+				color: #000
+
+				&:hover
+
+					color: $action
+
+		h3
+			font-size: 1em
+			font-weight: normal
+			padding-bottom: 2em
