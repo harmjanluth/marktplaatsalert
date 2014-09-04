@@ -16,7 +16,7 @@ function findNewAlerts()
 {
     global $firebase;
 
-    $minimal_timeout = 28800000; // IMPORTANT!! 8 hours minimal timeout
+    $minimal_timeout = 3600000; // IMPORTANT!! 1 hours minimal timeout
     $users    = json_decode( $firebase->get( "/users/" ) );
     
     foreach( $users as $uid => $user ) {
@@ -34,11 +34,11 @@ function findNewAlerts()
 
         // Not update anything yet
         //
-		if( isset( $user->last_checked ) ) { 
-        		if( ( abs( $user->last_checked ) - $now ) < $timeout ) {
-            		continue;
-    	    		}
-		}
+        if( isset( $user->last_checked ) ) { 
+                if( ( abs( $user->last_checked ) - $now ) < $timeout ) {
+                    continue;
+                    }
+        }
 
         // No alerts.. so do nothing
         //
@@ -55,11 +55,11 @@ function findNewAlerts()
             $ch = curl_init();
             
             curl_setopt( $ch, CURLOPT_URL, "http://www.marktplaatsupdate.nl/crawler/crawl.php?uid=" . $uid ); 
-            curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT_MS, 1);
+            curl_setopt( $ch, CURLOPT_FRESH_CONNECT, true);
+            // curl_setopt( $ch, CURLOPT_TIMEOUT_MS, 100);
              
-            curl_exec($ch);
-            curl_close($ch);
+            print curl_exec( $ch );
+            curl_close( $ch );
         }
     }
     
