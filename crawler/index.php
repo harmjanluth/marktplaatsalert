@@ -35,7 +35,7 @@ function findNewAlerts()
         // Not update anything yet
         //
         if( isset( $user->last_checked ) ) { 
-                if( ( abs( $user->last_checked ) - $now ) < $timeout ) {
+                if( ( abs( $user->last_checked - $now ) ) < $timeout ) {
                     continue;
                     }
         }

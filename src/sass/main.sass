@@ -104,7 +104,7 @@ section
 
 #set-preferences
 	margin: 0 auto
-	width: $width
+	max-width: $width
 
 	p
 		display: block
@@ -112,17 +112,18 @@ section
 
 #add-alert-form
 	margin: 0 auto
-	width: $width
-	padding-top: 5em
+	max-width: $width
+	padding-top: 3em
 	text-align: center
 
 	input
-		width: $width
+		width: 100%
 		text-align: center
-		padding: 1em
+		padding: 1em 0
 		border-width: 1px
 		border-color: #666
 		font-size: 1.2em
+		box-sizing: border-box
 
 	label
 		display: block
@@ -191,10 +192,9 @@ ul
 	
 		
 .intro
-	
 	font-size: 1.3em
 	line-height: 1.6em
-	padding: 50px 0
+	padding: 20px 0 50px 0
 
 	span
 		color: $action
@@ -202,7 +202,7 @@ ul
 .alerts-list
 	margin-top: 4em
 	background-color: #fff
-	width: $width
+	max-width: $width
 	padding: 0
 
 	li
@@ -236,7 +236,7 @@ ul
 	display: none
 
 	p
-		width: $width
+		max-width: $width
 		color: #999
 		margin: 0 auto 2em auto
 
@@ -278,3 +278,14 @@ section
 			font-size: 1em
 			font-weight: normal
 			padding-bottom: 2em
+
+@media screen and (max-width: 780px)
+	.header
+		font-size: 3.8vw
+	.welcome
+		font-size: 3.8vw
+
+iframe
+	margin: 30px auto
+	width: 48px
+	display: block
