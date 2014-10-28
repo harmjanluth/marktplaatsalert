@@ -127,6 +127,10 @@ function findNewAlerts( $uid )
             $items        = crawlMarktplaatsOpenSearch( $query, $distance, $postalcode );
             $last_updated = isset( $alert->notified ) ? $alert->notified : $alert->created;
             
+            if( count( $items ) == 0 ) {
+                continue;
+            } 
+
             $filtered = array_filter( $items, function( $item ) use ( $last_updated )
             {
                 return ( $item[ "pubDate" ] * 1000 ) > $last_updated;
