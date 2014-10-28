@@ -133,6 +133,7 @@ marktplaats_alert = {};
       }
       if (!value.length) {
         $(".range-filter [name=range]").prop("checked", false);
+        $(".range-filter").removeClass("active");
       }
       return updateUserPreferences();
     });
@@ -141,11 +142,13 @@ marktplaats_alert = {};
       postalcode = $("[name=postalcode]").val();
       if ($(this).prop("checked")) {
         $(".range-filter").addClass("active");
+      } else {
+        $(".range-filter").removeClass("active");
+      }
+      if (postalcode.length) {
         if (!reExPostalCode.test(postalcode)) {
           $("[name=postalcode]").addClass("invalid");
         }
-      } else {
-        $(".range-filter").removeClass("active");
       }
       return updateUserPreferences();
     });

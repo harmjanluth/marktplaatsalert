@@ -220,6 +220,7 @@ marktplaats_alert = {}
 			
 			if not value.length
 				$( ".range-filter [name=range]" ).prop( "checked", false )
+				$( ".range-filter" ).removeClass( "active" )
 
 			updateUserPreferences()
 
@@ -231,15 +232,14 @@ marktplaats_alert = {}
 
 			if( $( this ).prop( "checked" ) )
 				$( ".range-filter" ).addClass( "active" )
-
-				if not reExPostalCode.test( postalcode )
-					$( "[name=postalcode]" ).addClass( "invalid" )
 			else
 				$( ".range-filter" ).removeClass( "active" )
+
+			if postalcode.length
+				if not reExPostalCode.test( postalcode )
+					$( "[name=postalcode]" ).addClass( "invalid" )
 			
 			updateUserPreferences()
-
-
 
 	updateUserPreferences = ->
 
