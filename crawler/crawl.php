@@ -43,15 +43,16 @@ function dateSort($a, $b)
     return $b["pubDate"] == $a["pubDate"] ? 0 : ($b["pubDate"] > $a["pubDate"]) ? 1 : -1;
 }
 
-function crawlMarktplaatsOpenSearch( $query )
+function crawlMarktplaatsOpenSearch( $query, $distance = "", $postalcode = "" )
 {
     global $dateSort;
     
     $rss            = new rss_php;
     $feed_url       = "http://kopen.marktplaats.nl/opensearch.php?sortBy=SortIndex&sortOrder=decreasing&s=100&q=";
     $query          = str_replace( " ", "+", $query );
-    
-    $rss->load($feed_url . $query);
+
+    $feed_url       = $feed_url . $query . "&pc=" . $postalcode . "&d=" . $distance;
+    $rss->load( $feed_url );
     
     $feed_items     = $rss->getRSS();
     $size           = sizeof($feed_items["rss"]["channel"]);
@@ -105,6 +106,14 @@ function findNewAlerts( $uid )
     global $firebase;
 
     $user    = json_decode( $firebase->get( "/users/". $uid . "/" ) );
+
+    $distance       = "";
+    $postalcode     = "";
+
+    if( $user->preferences->range == 1 ) {
+        $distance = isset( $user->preferences->distance ) ? $user->preferences->distance : "";
+        $postalcode = isset( $user->preferences->postalcode ) ? $user->preferences->postalcode : "";
+    }
     
     // Everything is OK, do we have an email address?
     //
@@ -115,7 +124,7 @@ function findNewAlerts( $uid )
         foreach ( $user->alerts as $aid => $alert ) {
 
             $query        = $alert->query;
-            $items        = crawlMarktplaatsOpenSearch( $query );
+            $items        = crawlMarktplaatsOpenSearch( $query, $distance, $postalcode );
             $last_updated = isset( $alert->notified ) ? $alert->notified : $alert->created;
             
             $filtered = array_filter( $items, function( $item ) use ( $last_updated )

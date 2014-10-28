@@ -3,10 +3,11 @@ var marktplaats_alert;
 marktplaats_alert = {};
 
 (function() {
-  var addAlertForm, auth, fireAlert, getTodayFormatted, initialize, loggedIn, numberOfAlerts, showLogin, uid;
+  var addAlertForm, auth, fireAlert, getTodayFormatted, initialize, loggedIn, numberOfAlerts, reExPostalCode, showLogin, uid, updateUserPreferences;
   uid = null;
   numberOfAlerts = null;
   addAlertForm = document.getElementById("add-alert-form");
+  reExPostalCode = /^[1-9][0-9]{3}[\s]?[A-Za-z]{2}$/i;
   fireAlert = new Firebase("https://marktplaats-alert.firebaseIO.com");
   auth = new FirebaseSimpleLogin(fireAlert, function(error, user) {
     if (user) {
@@ -87,22 +88,83 @@ marktplaats_alert = {};
     fireAlert.child("users/" + uid + "/preferences").once("value", function(snapshot) {
       var preferences;
       preferences = snapshot.val();
-      if (!preferences.timeout) {
+      if (!preferences) {
         return;
       }
+      console.log(preferences);
       $("#set-preferences [name=period]").val(preferences.period);
-      return $("#set-preferences [name=times]").val(preferences.times);
+      $("#set-preferences [name=times]").val(preferences.times);
+      $("#set-preferences [name=postalcode]").val(preferences.postalcode);
+      $("#set-preferences [name=distance]").val(preferences.distance);
+      $("#set-preferences [name=range]").prop("checked", preferences.range);
+      if (preferences.range) {
+        return $(".range-filter").addClass("active");
+      }
     });
-    return $("#set-preferences select").on("change", function() {
-      var period, timeout, times;
-      period = $("#set-preferences [name=period]").val();
-      times = $("#set-preferences [name=times]").val();
-      timeout = period / times;
-      return fireAlert.child("users/" + uid + "/preferences").set({
-        timeout: timeout,
-        period: period,
-        times: times
-      });
+    $("#set-preferences select").on("change", function() {
+      return updateUserPreferences();
+    });
+    $(".range-filter [type=text]").on("keyup", function() {
+      var distance, postalcode;
+      distance = $("[name=distance]").val();
+      postalcode = $("[name=postalcode]").val();
+      if (postalcode && reExPostalCode.test(postalcode)) {
+        if (distance) {
+          $(".range-filter [name=range]").prop("checked", true);
+          $(".range-filter").addClass("active");
+        }
+        updateUserPreferences();
+      }
+      if ($(this).hasClass("input-postalcode")) {
+        if (reExPostalCode.test(postalcode)) {
+          return $("[name=postalcode]").removeClass("invalid");
+        }
+      }
+    });
+    $(".range-filter [type=text]").on("blur", function() {
+      var postalcode, value;
+      value = $(this).val();
+      postalcode = $("[name=postalcode]").val();
+      if ($(this).hasClass("input-postalcode")) {
+        if (!reExPostalCode.test(postalcode) && postalcode.length) {
+          $("[name=postalcode]").addClass("invalid");
+          $(".range-filter [name=range]").prop("checked", false);
+        }
+      }
+      if (!value.length) {
+        $(".range-filter [name=range]").prop("checked", false);
+      }
+      return updateUserPreferences();
+    });
+    return $(".range-filter [name=range]").on("click", function() {
+      var postalcode;
+      postalcode = $("[name=postalcode]").val();
+      if ($(this).prop("checked")) {
+        $(".range-filter").addClass("active");
+        if (!reExPostalCode.test(postalcode)) {
+          $("[name=postalcode]").addClass("invalid");
+        }
+      } else {
+        $(".range-filter").removeClass("active");
+      }
+      return updateUserPreferences();
+    });
+  };
+  updateUserPreferences = function() {
+    var distance, period, postalcode, range, timeout, times;
+    period = $("#set-preferences [name=period]").val();
+    times = $("#set-preferences [name=times]").val();
+    range = $(".range-filter [name=range]").prop("checked");
+    distance = $("[name=distance]").val();
+    postalcode = $("[name=postalcode]").val();
+    timeout = period / times;
+    return fireAlert.child("users/" + uid + "/preferences").set({
+      timeout: timeout,
+      period: period,
+      times: times,
+      distance: distance,
+      postalcode: postalcode,
+      range: range
     });
   };
   getTodayFormatted = function() {

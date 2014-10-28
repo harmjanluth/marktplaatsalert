@@ -1,3 +1,4 @@
+@charset "UTF-8";
 article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
   display: block; }
 
@@ -12,8 +13,8 @@ audio:not([controls]) {
   display: none; }
 
 html {
-  background: white;
-  color: black;
+  background: #fff;
+  color: #000;
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%; }
@@ -45,8 +46,8 @@ hr {
   height: 0; }
 
 mark {
-  background: yellow;
-  color: black; }
+  background: #ff0;
+  color: #000; }
 
 code, kbd, pre, samp {
   font-family: monospace, serif;
@@ -56,7 +57,7 @@ pre {
   white-space: pre-wrap; }
 
 q {
-  quotes: "\201C" "\201D" "\2018" "\2019"; }
+  quotes: "“" "”" "‘" "’"; }
 
 small {
   font-size: 80%; }
@@ -83,7 +84,7 @@ figure {
   margin: 0; }
 
 fieldset {
-  border: 1px solid silver;
+  border: 1px solid #c0c0c0;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em; }
 
@@ -150,13 +151,13 @@ table {
   -moz-osx-font-smoothing: grayscale; }
 
 .icon-twitter:before {
-  content: "\e600"; }
+  content: ""; }
 
 .icon-facebook:before {
-  content: "\e601"; }
+  content: ""; }
 
 .icon-googleplus:before {
-  content: "\e602"; }
+  content: ""; }
 
 html, body {
   padding: 0;
@@ -179,12 +180,12 @@ a {
   color: #fe4c4e; }
   a span {
     display: inline-block;
-    background-color: white;
+    background-color: #fff;
     padding: 0.2em 0.3em;
     border-radius: 5px; }
 
 section {
-  color: black; }
+  color: #000; }
 
 .welcome {
   font-size: 1.4em; }
@@ -218,6 +219,28 @@ section {
   #set-preferences p {
     display: block;
     text-align: center; }
+  #set-preferences input {
+    border: none;
+    text-align: center;
+    padding: 5px;
+    margin: 0 4px;
+    outline: none; }
+  #set-preferences .invalid {
+    border: 1px solid red; }
+  #set-preferences .input-distance {
+    width: 36px; }
+  #set-preferences .input-postalcode {
+    width: 80px; }
+  #set-preferences .range-filter {
+    opacity: 0.5;
+    cursor: pointer; }
+    #set-preferences .range-filter:hover {
+      opacity: 1; }
+    #set-preferences .range-filter.active {
+      opacity: 1; }
+
+.disclaimer {
+  line-height: 1.6em; }
 
 #add-alert-form {
   margin: 0 auto;
@@ -229,7 +252,7 @@ section {
     text-align: center;
     padding: 1em 0;
     border-width: 1px;
-    border-color: #666666;
+    border-color: #666;
     font-size: 1.2em;
     box-sizing: border-box; }
   #add-alert-form label {
@@ -237,7 +260,7 @@ section {
     text-align: center;
     width: 100%;
     padding-top: 1em;
-    color: #999999; }
+    color: #999; }
 
 .button {
   position: relative;
@@ -301,14 +324,14 @@ ul {
 
 .alerts-list {
   margin-top: 4em;
-  background-color: white;
+  background-color: #fff;
   max-width: 400px;
   padding: 0; }
   .alerts-list li {
     padding: 1em;
     border-width: 0 1px 1px 0;
     border-style: solid solid dashed solid;
-    border-color: #cccccc;
+    border-color: #ccc;
     font-size: 1.2em;
     cursor: pointer; }
     .alerts-list li:hover p {
@@ -320,9 +343,9 @@ ul {
       margin: 0; }
     .alerts-list li span {
       font-size: 0.8em;
-      color: #cccccc; }
+      color: #ccc; }
     .alerts-list li:last-child {
-      border-bottom: 1px solid #cccccc; }
+      border-bottom: 1px solid #ccc; }
 
 .footer {
   text-align: center;
@@ -330,7 +353,7 @@ ul {
   display: none; }
   .footer p {
     max-width: 400px;
-    color: #999999;
+    color: #999;
     margin: 0 auto 2em auto; }
 
 #set-preferences,
@@ -354,7 +377,7 @@ section.login {
       cursor: pointer;
       font-size: 4.2em;
       padding: 0 0.2em;
-      color: black; }
+      color: #000; }
       section.login .socials a:hover {
         color: #fe4c4e; }
   section.login h3 {
@@ -372,3 +395,5 @@ iframe {
   margin: 30px auto;
   width: 48px;
   display: block; }
+
+/*# sourceMappingURL=main.css.map */

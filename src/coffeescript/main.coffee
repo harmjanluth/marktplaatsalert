@@ -9,6 +9,7 @@ marktplaats_alert = {}
 	uid = null
 	numberOfAlerts = null
 	addAlertForm = document.getElementById( "add-alert-form" )
+	reExPostalCode = /^[1-9][0-9]{3}[\s]?[A-Za-z]{2}$/i
 
 	# Initialize firebase
 	# 
@@ -166,10 +167,17 @@ marktplaats_alert = {}
 			
 			preferences = snapshot.val()
 
-			return if not preferences.timeout
+			return if not preferences
+
+			console.log( preferences )
 
 			$( "#set-preferences [name=period]" ).val( preferences.period )
 			$( "#set-preferences [name=times]" ).val( preferences.times )
+			$( "#set-preferences [name=postalcode]" ).val( preferences.postalcode )
+			$( "#set-preferences [name=distance]" ).val( preferences.distance )
+			$( "#set-preferences [name=range]" ).prop( "checked", preferences.range )
+
+			$( ".range-filter" ).addClass( "active" ) if preferences.range
 
 		)
 
@@ -177,19 +185,83 @@ marktplaats_alert = {}
 		#
 		$( "#set-preferences select" ).on "change", ->
 			
-			# Backend defaults to minimal period
-			#
-			period 	= $( "#set-preferences [name=period]" ).val()
-			times 	= $( "#set-preferences [name=times]" ).val()
-			timeout = period / times
+			updateUserPreferences()
 
-			# Update user preference
-			#
-			fireAlert.child( "users/" + uid + "/preferences" ).set( 
-				timeout 	: timeout,
-				period 		: period,
-				times		: times
-			)
+		# Setup range filters
+		#
+		$( ".range-filter [type=text]" ).on "keyup", ->
+			
+			distance 	= $( "[name=distance]" ).val()
+			postalcode 	= $( "[name=postalcode]" ).val()
+
+			if( postalcode && reExPostalCode.test( postalcode ) )
+				
+				if distance
+					$( ".range-filter [name=range]" ).prop( "checked", true )
+					$( ".range-filter" ).addClass( "active" )
+
+				updateUserPreferences()
+
+			if $( this ).hasClass( "input-postalcode" )
+				if reExPostalCode.test( postalcode )
+					$( "[name=postalcode]" ).removeClass( "invalid" )
+
+		# Setup range filters
+		#
+		$( ".range-filter [type=text]" ).on "blur", ->
+
+			value = $(this).val()
+			postalcode 	= $( "[name=postalcode]" ).val()
+			
+			if $( this ).hasClass( "input-postalcode" )
+				if not reExPostalCode.test( postalcode ) && postalcode.length
+					$( "[name=postalcode]" ).addClass( "invalid" )
+					$( ".range-filter [name=range]" ).prop( "checked", false )
+			
+			if not value.length
+				$( ".range-filter [name=range]" ).prop( "checked", false )
+
+			updateUserPreferences()
+
+		# Setup range filters
+		#
+		$( ".range-filter [name=range]" ).on "click", ->
+
+			postalcode 	= $( "[name=postalcode]" ).val()
+
+			if( $( this ).prop( "checked" ) )
+				$( ".range-filter" ).addClass( "active" )
+
+				if not reExPostalCode.test( postalcode )
+					$( "[name=postalcode]" ).addClass( "invalid" )
+			else
+				$( ".range-filter" ).removeClass( "active" )
+			
+			updateUserPreferences()
+
+
+
+	updateUserPreferences = ->
+
+		# Backend defaults to minimal period
+		#
+		period 		= $( "#set-preferences [name=period]" ).val()
+		times 		= $( "#set-preferences [name=times]" ).val()
+		range 		= $( ".range-filter [name=range]" ).prop( "checked" )
+		distance 	= $( "[name=distance]" ).val()
+		postalcode 	= $( "[name=postalcode]" ).val()
+		timeout 	= period / times
+
+		# Update user preference
+		#
+		fireAlert.child( "users/" + uid + "/preferences" ).set( 
+			timeout 	: timeout,
+			period 		: period,
+			times		: times,
+			distance	: distance,
+			postalcode 	: postalcode,
+			range 		: range
+		)
 
 	# Get current date preformatted
 	#
