@@ -95,7 +95,7 @@ marktplaats_alert = {};
       $("#set-preferences [name=period]").val(preferences.period);
       $("#set-preferences [name=times]").val(preferences.times);
       $("#set-preferences [name=postalcode]").val(preferences.postalcode);
-      $("#set-preferences [name=distance]").val(preferences.distance);
+      $("#set-preferences [name=distance]").val(preferences.distance / 1000);
       $("#set-preferences [name=range]").prop("checked", preferences.range);
       if (preferences.range) {
         return $(".range-filter").addClass("active");
@@ -165,7 +165,7 @@ marktplaats_alert = {};
       timeout: timeout,
       period: period,
       times: times,
-      distance: distance,
+      distance: distance * 1000,
       postalcode: postalcode,
       range: range
     });

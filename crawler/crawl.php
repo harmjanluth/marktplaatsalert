@@ -167,12 +167,23 @@ function findNewAlerts( $uid )
             $headers .= "MIME-Version: 1.0\r\n";
             $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
             
+
+            <tr><td valign="top"><h2 style="margin:20px 0 0 0;">Beste Harm Jan Luth,</h2> <p style="color: #777;"><br/>Er zijn een nieuw aantal advertenties gevonden op Marktplaats.</p></td></tr>
+            <tr><td valign="top"><h3>Resultaten voor "kruisframe"</h3></td></tr>
+
             $message = "<html><body>Beste " . $user->profile->displayName . ",\r\n\r\n";
             $message .= "<p>Er zijn een nieuw aantal advertenties gevonden op Marktplaats.</p>";
             
             foreach ( $new_updates as $query_title => $updates ) {
 
                 $message .= "<h2>Resultaten voor '" . $query_title . "'</h2>";
+
+                <tr><td valign="top"><table cellpadding="0" cellspacing="0" border="0" align="center" style="border-bottom:1px dashed #ccc;"><tr><td valign="top" width="210"><a href="http://fietsen-brommers.marktplaats.nl/fietsen-oldtimers/862160428-te-koop-te-ruil-locomotief-kruisframe-fiets.html"><img src="http://i.marktplaats.com/00/s/NjAwWDgwMA==/z/8TgAAOSwDN1US3c7/$_82.JPG" align="absmiddle" width="190px" border="0"></a></td><td valign="top" style="line-height:1.4em;"><p> - Prijs: N.o.t.k. - Datum: Vandaag -
+                Te koop of evt te ruil de fiets die het
+langer vol gehouden heeft dan Oma Ziet
+er voor zijn bouwjaar nog heel redelijk
+uit en je kunt er zo op weg fietsen
+zelfs het licht doet...</p></td></tr>
 
                 foreach ( $updates as $update ) {
                     $message .= "<h3>" . $update[ "title" ] . "</h3>";
