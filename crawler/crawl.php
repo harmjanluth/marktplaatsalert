@@ -1,8 +1,8 @@
  <?php
 
 date_default_timezone_set("Europe/Amsterdam");
-error_reporting(-1);
-ini_set("display_errors", "On");
+//error_reporting(-1);
+//ini_set("display_errors", "On");
 
 require_once 'firebaseLib.php';
 require_once 'lib/firebaseStub.php';
@@ -84,7 +84,6 @@ function crawlMarktplaatsOpenSearch( $query, $distance = "", $postalcode = "" )
 
 function translatePubDate( $date_string )
 {
-    
     global $week_days;
     global $month_names;
     
@@ -167,35 +166,46 @@ function findNewAlerts( $uid )
             $headers .= "MIME-Version: 1.0\r\n";
             $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
             
-
-            <tr><td valign="top"><h2 style="margin:20px 0 0 0;">Beste Harm Jan Luth,</h2> <p style="color: #777;"><br/>Er zijn een nieuw aantal advertenties gevonden op Marktplaats.</p></td></tr>
-            <tr><td valign="top"><h3>Resultaten voor "kruisframe"</h3></td></tr>
-
-            $message = "<html><body>Beste " . $user->profile->displayName . ",\r\n\r\n";
-            $message .= "<p>Er zijn een nieuw aantal advertenties gevonden op Marktplaats.</p>";
+            $message = include_once("header.php");
+            $message .= '<tr><td valign="top"><h2 style="margin:20px 0 0 0;">Beste ' . $user->profile->displayName . ',</h2> <p style="color: #777;"><br/>Er zijn een nieuw aantal advertenties gevonden op Marktplaats.</p></td></tr>';
             
             foreach ( $new_updates as $query_title => $updates ) {
 
-                $message .= "<h2>Resultaten voor '" . $query_title . "'</h2>";
-
-                <tr><td valign="top"><table cellpadding="0" cellspacing="0" border="0" align="center" style="border-bottom:1px dashed #ccc;"><tr><td valign="top" width="210"><a href="http://fietsen-brommers.marktplaats.nl/fietsen-oldtimers/862160428-te-koop-te-ruil-locomotief-kruisframe-fiets.html"><img src="http://i.marktplaats.com/00/s/NjAwWDgwMA==/z/8TgAAOSwDN1US3c7/$_82.JPG" align="absmiddle" width="190px" border="0"></a></td><td valign="top" style="line-height:1.4em;"><p> - Prijs: N.o.t.k. - Datum: Vandaag -
-                Te koop of evt te ruil de fiets die het
-langer vol gehouden heeft dan Oma Ziet
-er voor zijn bouwjaar nog heel redelijk
-uit en je kunt er zo op weg fietsen
-zelfs het licht doet...</p></td></tr>
-
+                $message .= '<tr><td valign="top"><h3>Resultaten voor "' . $query_title . '"</h3></td></tr>';
+              
                 foreach ( $updates as $update ) {
-                    $message .= "<h3>" . $update[ "title" ] . "</h3>";
-                    $message .= "<p>" . $update[ "description" ] . "</p>";
-                    $message .= "<a href=\"" . $update[ "link" ] . "\">Adverentie bekijken</a>";
+                    
+                    $xpath = new DOMXPath(@DOMDocument::loadHTML($update['description']));
+                    $src = $xpath->evaluate("string(//img/@src)");
+                    $image_url = isset( $src ) ? $src : 'http://dummyimage.com/190x143/f6f6f6/fe4c4f.gif&amp;text=Geen+afbeelding';
+                    $description = preg_replace("/<img[^>]+\>/i", "", $update['description']); 
+                        
+                    $message .= '
+                        <tr>
+                            <td colspan="2" style="font-size: 18px;line-height:26px">' . $update['title'] . '</td>
+                        </tr>
+                        <tr>
+                            <td valign="top">
+                                <table cellpadding="0" cellspacing="0" border="0" align="center" style="border-bottom:1px dashed #ccc;">
+                                    <tr>
+                                        <td valign="top" width="210"><a href="' . $update['link'] . '"><img src="' . $image_url .  '" width="190px" align="absmiddle" border="0"></a></td>
+                                        <td valign="top" style="line-height:1.4em;">
+                                            <p>' . $description . '</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <a href="http://maps.google.com/?q=' . $update['geo:lat'] . ',' . $update['geo:long'] . '" style="display:inline-block;border-radius:3px;padding:0em 0 1em;color:#fe4c4e;margin-top:20px;text-decoration:none" target="_blank">Toon op kaart</a></td><td><a href="' . $update['link'] . '" style="display:inline-block;border-radius:3px;padding:0em 0 1em;color:#fe4c4e;margin-top:20px;text-decoration:none" target="_blank">Naar advertentie</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>';
                 }
-
-                $message .= "<br/><br/><br/><br/><br/><br/>";
+                
             }
             
-            $message .= "<a href='http://www.marktplaatsupdate.nl'>Mijn Marktplaatsupdate instellingen wijzigen</a>";
-            $message .= "</body></html>";
+            $message .= include_once("footer.php");
 
             // Mail updates
             //
@@ -214,7 +224,8 @@ zelfs het licht doet...</p></td></tr>
 
 // Go
 //
-if( isset( $_GET["uid"] ) ) {
+if( isset( $_GET["uid"] ) )
+{
     findNewAlerts( $_GET["uid"] );
 }
 
