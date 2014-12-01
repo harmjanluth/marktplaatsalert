@@ -102,6 +102,24 @@ section
 .more
 	padding-bottom: 2em
 
+	em
+		font-style: normal
+		color: #aaa
+
+	a
+		display: block
+		padding-bottom: 1em
+
+	input
+		border: 1px solid #ccc
+		height: 50px
+		text-align: center
+		min-width: 320px
+		display: none
+
+		&.invalid
+			color: $action
+
 #set-preferences
 	margin: 0 auto
 	max-width: $width
@@ -289,6 +307,54 @@ section
 
 	&.login
 		text-align: center
+
+		.email
+			padding-bottom: 2em
+
+			&.invalid
+				.button
+					a
+						background-color: #ccc
+						text-shadow: 0px 1px 0px darken( #ccc, 20 )
+						filter: dropshadow(color = black, offx = 0px, offy = 1px)
+						-webkit-box-shadow: inset 0 1px 0 #ccc, 0 8px 0 darken( #ccc, 30 )
+						-moz-box-shadow: inset 0 1px 0 #ccc, 0 8px 0 darken( #ccc, 30 )
+						box-shadow: inset 0 1px 0 #ccc, 0 8px 0 darken( #ccc, 30 )
+
+			input
+				display: block
+				padding: 0.7em
+				margin: 0 auto
+				text-align: center
+				border: 1px solid #ccc
+				border-radius: 0
+				min-width: 320px
+				min-height: 50px
+
+				&:first-child
+					border-bottom: none
+					border-radius: 5px 5px 0 0
+					margin-bottom: 0
+
+				&.invalid
+					color: $action
+
+			.button
+				min-width: 320px
+
+				i
+					display: none
+
+				&.loading
+
+					b
+						display: none
+					i
+						display: inline
+						font-style: normal
+
+				a
+					border-radius: 0 0 5px 5px
 		
 		.socials
 
@@ -307,7 +373,12 @@ section
 		h3
 			font-size: 1em
 			font-weight: normal
-			padding-bottom: 2em
+			padding-bottom: 1em
+
+		h4
+			font-weight: normal
+			text-align: center
+			font-style: italic
 
 @media screen and (max-width: 780px)
 	.header

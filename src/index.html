@@ -29,7 +29,7 @@
 
         <link href='http://fonts.googleapis.com/css?family=Lato:400,100,900,700' rel='stylesheet' type='text/css'>
         
-        <script src="https://cdn.firebase.com/js/client/1.0.21/firebase.js"></script>
+        <script src="https://cdn.firebase.com/js/client/2.0.5/firebase.js"></script>
         <script src="https://cdn.firebase.com/js/simple-login/1.6.3/firebase-simple-login.js"></script>
 
 </script>
@@ -46,7 +46,26 @@
                 Sla zoekopdrachten op en ontvang een mailtje <br/>zodra er nieuwe advertenties zijn
             </p>
 
-            <h3>inloggen met</h3>
+            <h3>Inloggen of registreren</h3>
+
+            <div class="email invalid">
+                <input name="email" type="text" placeholder="Emailadres" />
+                <input name="password" type="password" placeholder="Wachtwoord (min. 8 karakters)" pattern=".{8,}" required title="Minimaal 8 karakters" />
+                <div class="button logout">
+                    <a href="#" title="Aanmelden op Martkplaatsupdate.nl">
+                        <b>go go go</b>
+                        <i>een monumentje..</i>
+                    </a>
+                </div>
+            </div>
+
+             <div class="more">
+                <a href="#" title="wachtwoord vergeten" class="forgot-password">wachtwoord vergeten</a>
+                <input name="forgot" type="text" placeholder="Emailadres" />
+            </div>
+
+
+            <h4>of met</h4>
 
             <div class="socials">
                 <a class="login-facebook icon-facebook" title="Login met Facebook"></a>

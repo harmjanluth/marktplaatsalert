@@ -212,6 +212,20 @@ section {
 
 .more {
   padding-bottom: 2em; }
+  .more em {
+    font-style: normal;
+    color: #aaa; }
+  .more a {
+    display: block;
+    padding-bottom: 1em; }
+  .more input {
+    border: 1px solid #ccc;
+    height: 50px;
+    text-align: center;
+    min-width: 320px;
+    display: none; }
+    .more input.invalid {
+      color: #fe4c4e; }
 
 #set-preferences {
   margin: 0 auto;
@@ -371,6 +385,41 @@ ul {
 
 section.login {
   text-align: center; }
+  section.login .email {
+    padding-bottom: 2em; }
+    section.login .email.invalid .button a {
+      background-color: #ccc;
+      text-shadow: 0px 1px 0px #999999;
+      filter: dropshadow(color=black, offx=0px, offy=1px);
+      -webkit-box-shadow: inset 0 1px 0 #ccc, 0 8px 0 gray;
+      -moz-box-shadow: inset 0 1px 0 #ccc, 0 8px 0 gray;
+      box-shadow: inset 0 1px 0 #ccc, 0 8px 0 gray; }
+    section.login .email input {
+      display: block;
+      padding: 0.7em;
+      margin: 0 auto;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 0;
+      min-width: 320px;
+      min-height: 50px; }
+      section.login .email input:first-child {
+        border-bottom: none;
+        border-radius: 5px 5px 0 0;
+        margin-bottom: 0; }
+      section.login .email input.invalid {
+        color: #fe4c4e; }
+    section.login .email .button {
+      min-width: 320px; }
+      section.login .email .button i {
+        display: none; }
+      section.login .email .button.loading b {
+        display: none; }
+      section.login .email .button.loading i {
+        display: inline;
+        font-style: normal; }
+      section.login .email .button a {
+        border-radius: 0 0 5px 5px; }
   section.login .socials {
     margin-bottom: 7em; }
     section.login .socials a {
@@ -383,7 +432,11 @@ section.login {
   section.login h3 {
     font-size: 1em;
     font-weight: normal;
-    padding-bottom: 2em; }
+    padding-bottom: 1em; }
+  section.login h4 {
+    font-weight: normal;
+    text-align: center;
+    font-style: italic; }
 
 @media screen and (max-width: 780px) {
   .header {
