@@ -12,6 +12,7 @@ marktplaats_alert = {}
 	reEmail 			= /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/		
 	userFormIsSubmitted = false
 	resetPassword		= false
+	auth 				= null
 
 	# Initialize firebase
 	# 
@@ -33,7 +34,7 @@ marktplaats_alert = {}
 				$( "[name=email]" ).val( reset[0].substring(1) )
 
 
-	if not resetPassword
+	setupAuth = ->
 
 		auth 				= new FirebaseSimpleLogin( fireAlert, ( error, user ) ->
 			
@@ -69,6 +70,9 @@ marktplaats_alert = {}
 
 		)
 
+	if not resetPassword
+
+		setupAuth()
 	
 	# Show view for loggedin
 	#
@@ -93,7 +97,9 @@ marktplaats_alert = {}
 
 			$( ".login h3" ).text( "Inloggen of registreren" )
 
-			document.body.className = "";			
+			document.body.className = "";
+
+			setupAuth()
 
 	# Show view for not loggedin
 	#
@@ -359,8 +365,6 @@ marktplaats_alert = {}
 
 			return if not preferences
 
-			console.log( preferences )
-
 			$( "#set-preferences [name=period]" 	).val( preferences.period 				)
 			$( "#set-preferences [name=times]" 		).val( preferences.times 				)
 			$( "#set-preferences [name=postalcode]" ).val( preferences.postalcode 			)
@@ -481,10 +485,14 @@ marktplaats_alert = {}
 			fireAlert.child( "users/" + user.uid + "/profile" ).transaction( ( data ) ->
 
 				uid = user.uid
+				
+				# Facebook
+				# 
+				if( data && data.password )
+					user.email = data.password.email
 
-				# Show name
-				#
-				$( ".welcome span" ).html( user.displayName ) if user.displayName
+				if not user.email and not data.email
+					user.email = prompt( "We hebben nog geen emailadres van je.. Geef deze hier op!", "")
 
 				return user
 

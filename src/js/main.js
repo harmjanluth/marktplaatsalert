@@ -3,13 +3,14 @@ var marktplaats_alert;
 marktplaats_alert = {};
 
 (function() {
-  var addAlertForm, auth, checkUserForm, fireAlert, getTodayFormatted, initialize, loggedIn, numberOfAlerts, reEmail, reset, resetPassword, showLogin, uid, updateUserPreferences, userFormIsSubmitted;
+  var addAlertForm, auth, checkUserForm, fireAlert, getTodayFormatted, initialize, loggedIn, numberOfAlerts, reEmail, reset, resetPassword, setupAuth, showLogin, uid, updateUserPreferences, userFormIsSubmitted;
   uid = null;
   numberOfAlerts = null;
   addAlertForm = document.getElementById("add-alert-form");
   reEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   userFormIsSubmitted = false;
   resetPassword = false;
+  auth = null;
   fireAlert = new Firebase("https://marktplaats-alert.firebaseIO.com");
   if (window.location.hash.length) {
     reset = window.location.hash.split("/");
@@ -21,8 +22,8 @@ marktplaats_alert = {};
       }
     }
   }
-  if (!resetPassword) {
-    auth = new FirebaseSimpleLogin(fireAlert, function(error, user) {
+  setupAuth = function() {
+    return auth = new FirebaseSimpleLogin(fireAlert, function(error, user) {
       if (user) {
         fireAlert.child("users/" + user.uid + "/profile").transaction(function(data) {
           uid = user.uid;
@@ -36,6 +37,9 @@ marktplaats_alert = {};
         fireAlert.getAuth();
       }
     });
+  };
+  if (!resetPassword) {
+    setupAuth();
   }
   loggedIn = function() {
     initialize();
@@ -47,7 +51,8 @@ marktplaats_alert = {};
         fireAlert.unauth();
       }
       $(".login h3").text("Inloggen of registreren");
-      return document.body.className = "";
+      document.body.className = "";
+      return setupAuth();
     });
   };
   showLogin = function() {
@@ -237,7 +242,6 @@ marktplaats_alert = {};
       if (!preferences) {
         return;
       }
-      console.log(preferences);
       $("#set-preferences [name=period]").val(preferences.period);
       $("#set-preferences [name=times]").val(preferences.times);
       $("#set-preferences [name=postalcode]").val(preferences.postalcode);
@@ -328,8 +332,11 @@ marktplaats_alert = {};
     if (user) {
       fireAlert.child("users/" + user.uid + "/profile").transaction(function(data) {
         uid = user.uid;
-        if (user.displayName) {
-          $(".welcome span").html(user.displayName);
+        if (data && data.password) {
+          user.email = data.password.email;
+        }
+        if (!user.email && !data.email) {
+          user.email = prompt("We hebben nog geen emailadres van je.. Geef deze hier op!", "");
         }
         return user;
       });

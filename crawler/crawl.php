@@ -119,6 +119,7 @@ function findNewAlerts( $uid )
     if (isset($user->alerts)) {
 
         $new_updates = array();
+        $email = ( isset( $user->profile->email ) ) ? $user->profile->email : $user->profile->password->email;
         
         foreach ( $user->alerts as $aid => $alert ) {
 
@@ -206,11 +207,20 @@ function findNewAlerts( $uid )
             }
             
             $message .= include_once("footer.php");
-
+            
             // Mail updates
             //
-            mail( $user->profile->email, $subject, $message, $headers );
+            mail( $email, $subject, $message, $headers );
         }
+
+        // Write to logfile
+        //
+        $log  = date("F j, Y, g:i a").PHP_EOL.
+        "User: ".$email.PHP_EOL.
+        "Update count: ".count($new_updates).PHP_EOL.
+        "-------------------------".PHP_EOL;
+            
+        file_put_contents('emails.txt', $log, FILE_APPEND);
 
         // Update user's last updated time
         //

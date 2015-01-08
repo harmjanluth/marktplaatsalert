@@ -222,7 +222,7 @@ section {
     border: 1px solid #ccc;
     height: 50px;
     text-align: center;
-    min-width: 320px;
+    min-width: 280px;
     display: none; }
     .more input.invalid {
       color: #fe4c4e; }
@@ -401,7 +401,7 @@ section.login {
       text-align: center;
       border: 1px solid #ccc;
       border-radius: 0;
-      min-width: 320px;
+      min-width: 280px;
       min-height: 50px; }
       section.login .email input:first-child {
         border-bottom: none;
@@ -410,7 +410,7 @@ section.login {
       section.login .email input.invalid {
         color: #fe4c4e; }
     section.login .email .button {
-      min-width: 320px; }
+      min-width: 280px; }
       section.login .email .button i {
         display: none; }
       section.login .email .button.loading b {
